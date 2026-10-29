@@ -159,12 +159,22 @@ export default function ProjectRepositorySection() {
       <div className="container-page">
         {/* Section Header */}
         <div className="section-header">
-          <div className="badge-eclab">
-            <span className="badge-dot" />
-            <span>CENTRAL REPOSITORY</span>
+          <div
+            style={{
+              fontSize: '0.82rem',
+              fontWeight: 700,
+              color: 'var(--accent-blue)',
+              letterSpacing: '0.04em',
+              marginBottom: '0.75rem',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+            }}
+          >
+            <span>•</span> Central Repository
           </div>
           <h2 id="repo-heading" className="section-title">
-            Explore Academic Projects
+            Explore Verified <span className="gradient-text">Academic Research</span>
           </h2>
           <p className="section-description">
             Approved electronics and communication engineering projects published in the laboratory repository.

@@ -28,8 +28,9 @@ dotenv.config();
 const API_BASE_URL = 'http://localhost:5001';
 
 class TestClient {
-  constructor() {
+  constructor(clientId) {
     this.cookies = new Map();
+    this.clientId = clientId || `auth_client_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
   }
 
   storeCookies(response) {
@@ -67,6 +68,7 @@ class TestClient {
     const url = `${API_BASE_URL}${endpoint}`;
     const headers = {
       'Content-Type': 'application/json',
+      'x-test-client-id': this.clientId,
       ...options.headers,
     };
 

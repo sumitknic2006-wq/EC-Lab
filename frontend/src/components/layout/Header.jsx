@@ -1,24 +1,43 @@
 import { Link } from '../../routes/router';
+import { useRouter } from '../../routes/useRouter';
+import { useAuth } from '../../context/useAuth';
 
 export default function Header() {
+  const { user, loading, logout, isAuthenticated } = useAuth();
+  const { navigate } = useRouter();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
+  };
+
   return (
-    <header style={styles.header}>
-      <div className="container-page" style={styles.container}>
-        <Link to="/" style={styles.brandLink} aria-label="EC LAB Home">
-          <div style={styles.brand}>
-            <div style={styles.logoMark}>
-              <span style={styles.logoAccent} />
-            </div>
-            <div>
-              <div style={styles.brandTitle}>EC LAB</div>
-              <div className="header-brand-subtitle" style={styles.brandSubtitle}>
-                Academic Project Repository
-              </div>
-            </div>
+    <header className="header-glass">
+      <div className="container-page header-container">
+        {/* Brand Left */}
+        <Link to="/" className="header-brand" aria-label="EC LAB Home">
+          <div className="header-logo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+            </svg>
+          </div>
+          <div>
+            <div className="header-brand-title">EC LAB</div>
+            <div className="header-brand-sub">Academic Repository</div>
           </div>
         </Link>
 
-        <div style={styles.tagWrapper}>
+        {/* Center Nav Links */}
+        <nav className="header-nav-center" aria-label="Main Navigation">
+          <Link to="/" className="header-nav-link">Home</Link>
+          <a href="#projects" className="header-nav-link">Projects</a>
+          <a href="#workflow" className="header-nav-link">The Workflow</a>
+          <a href="#capabilities" className="header-nav-link">Capabilities</a>
+          <a href="#pricing" className="header-nav-link">Access</a>
+        </nav>
+
+        {/* Right CTA / Auth Group */}
+        <div className="header-nav-right">
           <Link
             to="/verify/demo-tag"
             className="badge-eclab badge-clickable"
@@ -27,76 +46,44 @@ export default function Header() {
             <span className="badge-dot" />
             QR / NFC Verification
           </Link>
+
+          <div className="header-auth-group">
+            {loading ? (
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>...</span>
+            ) : isAuthenticated && user ? (
+              <>
+                <Link to="/profile" className="header-user-btn" aria-label="View your student profile">
+                  <span className="header-user-avatar">
+                    {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                  </span>
+                  <span>{user.name.split(' ')[0]}</span>
+                </Link>
+                <button
+                  type="button"
+                  className="header-logout-btn"
+                  onClick={handleLogout}
+                  aria-label="Sign out of your session"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className="header-login-link">
+                  Sign In
+                </Link>
+                <Link
+                  to="/signup"
+                  className="btn-primary"
+                  style={{ padding: '0.45rem 1.1rem', fontSize: '0.85rem' }}
+                >
+                  Start as Student →
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </header>
   );
 }
-
-const styles = {
-  header: {
-    backgroundColor: 'var(--bg-header)',
-    backdropFilter: 'blur(12px)',
-    WebkitBackdropFilter: 'blur(12px)',
-    borderBottom: '1px solid var(--border-medium)',
-    position: 'sticky',
-    top: 0,
-    zIndex: 100,
-    height: 'var(--header-height)',
-    display: 'flex',
-    alignItems: 'center',
-  },
-  container: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  brandLink: {
-    textDecoration: 'none',
-    color: 'inherit',
-    display: 'flex',
-    alignItems: 'center',
-  },
-  brand: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.875rem',
-  },
-  logoMark: {
-    width: '36px',
-    height: '36px',
-    backgroundColor: 'var(--bg-secondary)',
-    border: '1px solid var(--border-medium)',
-    borderRadius: 'var(--radius-md)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-    boxShadow: 'var(--shadow-sm)',
-  },
-  logoAccent: {
-    width: '12px',
-    height: '12px',
-    backgroundColor: 'var(--accent-red)',
-    borderRadius: '3px',
-    boxShadow: 'var(--accent-red-glow)',
-  },
-  brandTitle: {
-    fontFamily: 'var(--font-heading)',
-    fontSize: '1.25rem',
-    fontWeight: 800,
-    color: 'var(--text-primary)',
-    letterSpacing: '-0.02em',
-    lineHeight: 1.1,
-  },
-  brandSubtitle: {
-    fontSize: '0.75rem',
-    color: 'var(--text-muted)',
-    fontWeight: 500,
-    letterSpacing: '0.01em',
-  },
-  tagWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-};
